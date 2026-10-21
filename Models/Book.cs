@@ -21,4 +21,6 @@ public class Book
 
     public int? AuthorsID { get; set; }
     public Authors? Authors { get; set; } //navigation property
+    
+    public ICollection<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
 }

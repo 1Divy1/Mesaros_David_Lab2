@@ -30,6 +30,8 @@ namespace Mesaros_David_Lab2.Pages.Books
 
             var book = await _context.Book
                 .Include(b => b.Authors)
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bookCategory => bookCategory.Category)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (book is not null)
