@@ -1,4 +1,4 @@
-@page
+@page "{id:int?}"
 @model Mesaros_David_Lab2.Models.IndexModel
 
 @{
@@ -13,17 +13,15 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Category[0].CategoryName)
-            </th>
+            <th>Category</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Category) {
-        <tr>
+        <tr class="@(item.ID == Model.CategoryID ? "table-success" : "")">
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
+                <a asp-page="./Index" asp-route-id="@item.ID">@item.CategoryName</a>
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
@@ -34,3 +32,32 @@
 }
     </tbody>
 </table>
+
+@if (Model.CategoryID.HasValue)
+{
+    <h2>Books in Selected Category</h2>
+    @if (Model.Books.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Books)
+                {
+                    <tr>
+                        <td>@book.Title</td>
+                        <td>@(book.Authors is null ? "Unknown author" : book.Authors.FullName)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>This category has no books yet.</p>
+    }
+}

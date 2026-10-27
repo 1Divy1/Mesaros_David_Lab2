@@ -10,11 +10,24 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+<form asp-page="./Index" method="get" class="mb-3">
+    <label for="searchString">Find by book title or author name:</label>
+    <div class="input-group">
+        <input id="searchString" type="text" name="searchString" value="@Model.CurrentFilter" class="form-control" />
+        <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a asp-page="./Index" class="btn btn-outline-secondary">Back to full list</a>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.TitleSort" asp-route-searchString="@Model.CurrentFilter">Title</a>
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.AuthorSort" asp-route-searchString="@Model.CurrentFilter">Author</a>
+            </th>
             <th>Price</th>
             <th>Publishing Date</th>
             <th>Publisher</th>
@@ -26,7 +39,10 @@
 @foreach (var item in Model.BookD.Books) {
         <tr class="@(item.ID == Model.BookID ? "table-success" : null)">
             <td>
-                <a asp-page="./Index" asp-route-id="@item.ID">@item.Title</a>
+                <a asp-page="./Index"
+                   asp-route-id="@item.ID"
+                   asp-route-sortOrder="@Model.CurrentSort"
+                   asp-route-searchString="@Model.CurrentFilter">@item.Title</a>
             </td>
             <td>
                 @(item.Authors is null ? "" : $"{item.Authors.FirstName} {item.Authors.LastName}")

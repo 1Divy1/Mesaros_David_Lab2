@@ -1,4 +1,4 @@
-@page
+@page "{id:int?}"
 @model Mesaros_David_Lab2.Pages.Publishers.IndexModel
 
 @{
@@ -13,19 +13,18 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Publisher[0].PublisherName)
-            </th>
+            <th>Publisher</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Publisher) {
-        <tr>
+        @foreach (var item in Model.PublisherData.Publishers) {
+        <tr class="@(item.ID == Model.PublisherID ? "table-success" : "")">
             <td>
                 @Html.DisplayFor(modelItem => item.PublisherName)
             </td>
             <td>
+                <a asp-page="./Index" asp-route-id="@item.ID">Select</a> |
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
@@ -34,3 +33,32 @@
 }
     </tbody>
 </table>
+
+@if (Model.PublisherID.HasValue)
+{
+    <h2>Books Edited by Selected Publisher</h2>
+    @if (Model.PublisherData.Books.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.PublisherData.Books)
+                {
+                    <tr>
+                        <td>@book.Title</td>
+                        <td>@(book.Authors?.FullName ?? "Unknown author")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>This publisher has no books yet.</p>
+    }
+}

@@ -21,17 +21,49 @@ namespace Mesaros_David_Lab2.Pages.Books
 
         public BookData BookD { get; set; } = new();
         public int BookID { get; set; }
+        public string TitleSort { get; set; } = string.Empty;                                              
+        public string AuthorSort { get; set; } = string.Empty;
+        public string CurrentSort { get; set; } = string.Empty;
+        public string CurrentFilter { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(
+            int? id,
+            string? sortOrder,
+            string? searchString)
         {
-            var books = await _context.Book
+            CurrentSort = sortOrder ?? string.Empty;
+            CurrentFilter = searchString ?? string.Empty;
+            TitleSort = string.IsNullOrEmpty(sortOrder) ? "title_desc" : string.Empty;
+            AuthorSort = sortOrder == "author" ? "author_desc" : "author";
+
+            var booksQuery = _context.Book
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
                 .Include(b => b.BookCategories)
                     .ThenInclude(bookCategory => bookCategory.Category)
-                .AsNoTracking()
-                .OrderBy(book => book.Title)
-                .ToListAsync();
+                .AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                booksQuery = booksQuery.Where(book =>
+                    book.Title.Contains(searchString) ||
+                    (book.Authors != null &&
+                     (book.Authors.FirstName.Contains(searchString) ||
+                      book.Authors.LastName.Contains(searchString))));
+            }
+
+            var books = await booksQuery.ToListAsync();
+            books = sortOrder switch
+            {
+                "title_desc" => books.OrderByDescending(book => book.Title).ToList(),
+                "author" => books.OrderBy(book => book.Authors == null
+                    ? string.Empty
+                    : book.Authors.FullName).ToList(),
+                "author_desc" => books.OrderByDescending(book => book.Authors == null
+                    ? string.Empty
+                    : book.Authors.FullName).ToList(),
+                _ => books.OrderBy(book => book.Title).ToList()
+            };
 
             BookD = new BookData
             {
