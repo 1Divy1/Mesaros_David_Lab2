@@ -20,18 +20,22 @@
             <div class="form-floating mb-3">
                 <input asp-for="Member.FirstName" class="form-control" placeholder="First name" />
                 <label asp-for="Member.FirstName">First name</label>
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Member.LastName" class="form-control" placeholder="Last name" />
                 <label asp-for="Member.LastName">Last name</label>
+                <span asp-validation-for="Member.LastName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Member.Adress" class="form-control" placeholder="Address" />
                 <label asp-for="Member.Adress">Address</label>
+                <span asp-validation-for="Member.Adress" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Member.Phone" class="form-control" placeholder="Phone" />
                 <label asp-for="Member.Phone">Phone</label>
+                <span asp-validation-for="Member.Phone" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />

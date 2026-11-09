@@ -138,6 +138,8 @@ namespace Mesaros_David_Lab2.Areas.Identity.Pages.Account
                     _context.Member.Add(Member);
                     await _context.SaveChangesAsync();
 
+                    // atribuim in mod automat rolul de 'User' oricarui utilizator nou inregistrat
+                    var role = await _userManager.AddToRoleAsync(user, "User");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
